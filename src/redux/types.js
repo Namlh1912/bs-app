@@ -1,0 +1,36 @@
+// LOGIN
+export const LOGIN_REQUEST = '@@auth/LOGIN';
+export const LOGIN_SUCCESS = '@@auth/LOGIN_SUCCESS';
+export const LOGIN_FAIL = '@@auth/LOGIN_FAIL';
+
+//LIST BOOK
+export const LIST_BOOK_REQUEST = '@@auth/LIST_BOOK';
+export const LIST_BOOK_SUCCESS = '@@auth/LIST_BOOK_SUCCESS';
+export const LIST_BOOK_FAIL = '@@auth/LIST_BOOK__FAIL';
+
+// USER INFO
+export const GET_USER_INFO_REQUEST = '@@auth/GET_USER_INFO_REQUEST';
+export const GET_USER_INFO_SUCCESS = '@@auth/GET_USER_INFO_SUCCESS';
+export const GET_USER_INFO_FAIL = '@@auth/GET_USER_INFO_FAIL';
+
+//LIST ORDER HISTORY
+export const LIST_ORDER_REQUEST = '@@auth/LIST_ORDER_REQUEST';
+export const LIST_ORDER_SUCCESS = '@@auth/LIST_ORDER_SUCCESS';
+export const LIST_ORDER_FAIL = '@@auth/LIST_ORDER_FAIL';
+
+//CREATE ORDER
+export const CREATE_ORDER_REQUEST = '@@auth/CREATE_ORDER_REQUEST';
+export const CREATE_ORDER_SUCCESS = '@@auth/CREATE_ORDER_SUCCESS';
+export const CREATE_ORDER_FAIL = '@@auth/CREATE_ORDER_FAIL';
+
+//ADD TO CART
+export const ADD_ITEM_TO_CART = '@@auth/ADD_ITEM_TO_CART';
+
+//REMOVE ITEM CART
+export const REMOVE_ITEM_CART = '@@auth/REMOVE_ITEM_CART';
+
+//UPDATE QUANTITY
+export const UPDATE_ITEM_QUANTITY = '@@auth/UPDATE_ITEM_QUANTITY';
+
+//REMOVE SINGLE ITEM FROM CART
+export const EMPTY_CART = '@@auth/EMPTY_CART';
