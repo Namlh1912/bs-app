@@ -3,9 +3,10 @@
  **/
 
 // React native and others libraries imports
-import React, { Component } from 'react';
-import { AsyncStorage, Image, StyleSheet } from 'react-native';
-import { View, Container, Content, Button, Left, Right, Icon, Grid, Col, Toast, Text as NBText } from 'native-base';
+import React, {Component} from 'react';
+import {AsyncStorage, Image, StyleSheet} from 'react-native';
+import {View, Container, Content, Button, Left, Right, Icon, Grid, Col, Toast, Text as NBText} from 'native-base';
+import HeaderImageScrollView, {TriggeringView} from 'react-native-image-header-scroll-view';
 
 // Our custom files and classes import
 import Colors from '../components/Colors';
@@ -31,7 +32,7 @@ export default class BookDetail extends Component {
 
   componentWillMount() {
     //get the product with id of this.props.product.id from your server
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     const bookId = navigation.getParam('id', 'NO-ID');
     const book = books.filter(item => item.id === bookId);
     console.log(book[0]);
@@ -43,41 +44,57 @@ export default class BookDetail extends Component {
 
     //Left-side Navbar
     var left = (
-      <Left style={{flex:1}}>
-        <Button onPress={()=> this.props.navigation.goBack()} transparent>
-          <Icon name='ios-arrow-back' />
+      <Left style={{flex: 1}}>
+        <Button onPress={() => this.props.navigation.goBack()} transparent>
+          <Icon style={{color: "#fff"}} name='ios-arrow-back'/>
         </Button>
       </Left>
     );
 
     //Right-side Navbar
     var right = (
-      <Right style={{flex:1}}>
-        <Button  transparent>
-          <Icon name='ios-search-outline' />
+      <Right style={{flex: 1}}>
+        <Button transparent>
+          <Icon style={{color: "#fff"}} name='ios-search-outline'/>
         </Button>
         <Button onPress={() => this.props.navigation.navigate('Cart')} transparent>
-          <Icon name='ios-cart' />
+          <Icon style={{color: "#fff"}} name='ios-cart'/>
         </Button>
       </Right>
     );
 
-    return(
+    return (
       <Container style={{backgroundColor: '#fdfdfd'}}>
-        <Navbar left={left} right={right} title={'Book Detail'} />
-        <View style={styles.container}>
-          <View style = {styles.backgroundContainer}>
-            <Image source = {background} resizeMode = 'stretch' style = {styles.backdrop} />
-          </View>
-          <View style={styles.overlay}>
+        <Navbar left={left} right={right} title={'Book Detail'}/>
+        <HeaderImageScrollView
+          maxHeight={350}
+          minHeight={0}
+          fadeOutForeground
+          renderHeader={() =>
             <Image
-              style = {styles.logo}
-              source = {mc}
+              source={background}
+              resizeMode='stretch'
+              style={styles.backdrop}
             />
-          </View>
-        </View>
-        <Content>
-          <View style={{backgroundColor: '#fdfdfd', paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12, alignItems: 'center'}}>
+          }
+
+          renderForeground={() => (
+            <View style={styles.overlay}>
+              <Image
+                style = {styles.logo}
+                source = {mc}
+              />
+            </View>
+          )}
+        >
+          <View style={{
+            backgroundColor: '#fdfdfd',
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingLeft: 12,
+            paddingRight: 12,
+            alignItems: 'center'
+          }}>
             <Grid>
               <Col size={3}>
                 <Text style={{fontSize: 18}}>{this.state.book.title}</Text>
@@ -94,21 +111,30 @@ export default class BookDetail extends Component {
               </Col>
               <Col size={3}>
                 <View style={{flex: 1, flexDirection: 'row'}}>
-                  <Button style={{width:50, justifyContent:'center'}} icon light onPress={() => this.setState({quantity: this.state.quantity>1 ? this.state.quantity-1 : 1})} >
-                    <Icon name='ios-remove-outline' />
+                  <Button style={{width: 50, justifyContent: 'center'}} icon light
+                          onPress={() => this.setState({quantity: this.state.quantity > 1 ? this.state.quantity - 1 : 1})}>
+                    <Icon name='ios-remove-outline'/>
                   </Button>
-                  <View style={{flex: 4, justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30}}>
+                  <View style={{
+                    flex: 4,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingLeft: 30,
+                    paddingRight: 30
+                  }}>
                     <Text style={{fontSize: 18}}>{this.state.quantity}</Text>
                   </View>
-                  <Button style={{width:50, justifyContent:'center'}} icon light onPress={() => this.setState({quantity: this.state.quantity+1})}>
-                    <Icon name='ios-add' />
+                  <Button style={{width: 50, justifyContent: 'center'}} icon light
+                          onPress={() => this.setState({quantity: this.state.quantity + 1})}>
+                    <Icon name='ios-add'/>
                   </Button>
                 </View>
               </Col>
             </Grid>
             <Grid style={{marginTop: 15}}>
               <Col size={3}>
-                <Button block onPress={this.addToCart.bind(this)} style={{backgroundColor: Colors.navbarBackgroundColor}}>
+                <Button block onPress={this.addToCart.bind(this)}
+                        style={{backgroundColor: Colors.navbarBackgroundColor}}>
                   <Text style={{color: "#fdfdfd", marginLeft: 5}}>Add to cart</Text>
                 </Button>
               </Col>
@@ -121,10 +147,17 @@ export default class BookDetail extends Component {
                     padding: 10,
                     borderWidth: 1,
                     borderRadius: 3,
-                    borderColor: 'rgba(149, 165, 166, 0.3)'}}
+                    borderColor: 'rgba(149, 165, 166, 0.3)'
+                  }}
                 >
                   <Text style={{marginBottom: 5}}>Description</Text>
-                  <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+                  <View style={{
+                    width: 50,
+                    height: 1,
+                    backgroundColor: 'rgba(44, 62, 80, 0.5)',
+                    marginLeft: 7,
+                    marginBottom: 10
+                  }}/>
                   <NBText note>
                     this is a description
                   </NBText>
@@ -134,31 +167,39 @@ export default class BookDetail extends Component {
           </View>
           <View style={{marginTop: 15, paddingLeft: 12, paddingRight: 12}}>
             <Text style={{marginBottom: 5}}>Similar items</Text>
-            <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+            <View style={{
+              width: 50,
+              height: 1,
+              backgroundColor: 'rgba(44, 62, 80, 0.5)',
+              marginLeft: 7,
+              marginBottom: 10
+            }}/>
             {this.renderSimilairs()}
           </View>
-        </Content>
+
+        </HeaderImageScrollView>
       </Container>
     );
   }
+
   renderSimilairs() {
     let items = [];
-    let stateItems = books.filter(book => book.price>40);
+    let stateItems = books.filter(book => book.price > this.state.book.price);
     console.log(stateItems);
-    for(var i=0; i<stateItems.length; i+=2 ) {
-      if(stateItems[i+1]) {
+    for (var i = 0; i < 4; i += 2) {
+      if (stateItems[i + 1]) {
         items.push(
           <Grid key={i}>
-            <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]} />
-            <Book navigation={this.props.navigation} key={stateItems[i+1].id} book={stateItems[i+1]} isRight />
+            <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]}/>
+            <Book navigation={this.props.navigation} key={stateItems[i + 1].id} book={stateItems[i + 1]} isRight/>
           </Grid>
         );
       }
       else {
         items.push(
           <Grid key={i}>
-            <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]} />
-            <Col key={i+1} />
+            <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]}/>
+            <Col key={i + 1}/>
           </Grid>
         );
       }
@@ -170,11 +211,11 @@ export default class BookDetail extends Component {
     var book = this.state.book;
     book['quantity'] = this.state.quantity;
     AsyncStorage.getItem("CART", (err, res) => {
-      if(!res) AsyncStorage.setItem("CART",JSON.stringify([book]));
+      if (!res) AsyncStorage.setItem("CART", JSON.stringify([book]));
       else {
         var items = JSON.parse(res);
         items.push(book);
-        AsyncStorage.setItem("CART",JSON.stringify(items));
+        AsyncStorage.setItem("CART", JSON.stringify(items));
       }
       Toast.show({
         text: 'Product added to your cart !',
@@ -200,7 +241,10 @@ var styles = StyleSheet.create({
     alignItems: 'center',
   },
   overlay: {
-    paddingTop: 25,
+    flex: 1,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   logo: {
     backgroundColor: 'rgba(0,0,0,0)',
@@ -211,7 +255,7 @@ var styles = StyleSheet.create({
     borderColor: '#ddd'
   },
   backdrop: {
-    flex:1,
+    flex: 1,
     flexDirection: 'row'
   },
   headline: {

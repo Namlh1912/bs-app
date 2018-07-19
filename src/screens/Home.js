@@ -29,17 +29,17 @@ class Home extends Component {
     var left = (
       <Left style={{flex:1}}>
         <Button onPress={() => this.props.navigation.openDrawer()} transparent>
-          <Icon name='ios-menu-outline' />
+          <Icon style={{ color: "#fff"}} name='ios-menu-outline' />
         </Button>
       </Left>
     );
     var right = (
       <Right style={{flex:1}}>
         <Button  transparent>
-          <Icon name='ios-search-outline' />
+          <Icon style={{ color: "#fff"}} name='ios-search-outline' />
         </Button>
         <Button onPress={() => this.props.navigation.navigate('Cart')} transparent>
-          <Icon name='ios-cart' />
+          <Icon style={{ color: "#fff"}} name='ios-cart' />
         </Button>
       </Right>
     );

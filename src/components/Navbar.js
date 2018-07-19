@@ -18,15 +18,14 @@ export default class Navbar extends Component {
     return(
       <Header
         style={{backgroundColor: Colors.navbarBackgroundColor}}
-        backgroundColor={Colors.navbarBackgroundColor}
         androidStatusBarColor={Colors.statusBarColor}
         noShadow={true}
       >
-        {this.props.left ? this.props.left : <Left style={{flex: 1}} />}
+        {this.props.left ? this.props.left : <Left style={{color: 'white', flex: 1}} />}
         <Body style={styles.body}>
         <Title style={styles.title}>{this.props.title}</Title>
         </Body>
-        {this.props.right ? this.props.right : <Right style={{flex: 1}} />}
+        {this.props.right ? this.props.right : <Right style={{color:'white', flex: 1}} />}
       </Header>
     );
   }
