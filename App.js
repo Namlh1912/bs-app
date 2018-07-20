@@ -8,13 +8,19 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import { Provider } from 'react-redux';
 
+import configureStore from './src/boot/store';
 import Navigation from './src/boot/navigation';
+
+const store = configureStore();
 
 export default class App extends Component<Props> {
   render() {
     return (
-      <Navigation/>
+      <Provider store={store}>
+        <Navigation/>
+      </Provider>
     );
   }
 }

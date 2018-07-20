@@ -75,7 +75,13 @@ export default class Signup extends Component {
             </Item>
             {this.state.hasError?<Text style={{color: "#c0392b", textAlign: 'center', marginTop: 10}}>{this.state.errorText}</Text>:null}
             <View style={{alignItems: 'center'}}>
-              <Button onPress={() => this.signup()} style={{backgroundColor: Colors.navbarBackgroundColor, marginTop: 20}}>
+              <Button onPress={() => this.signup()}
+                      style={{
+                        width: 70,
+                        justifyContent: 'center',
+                        backgroundColor: Colors.navbarBackgroundColor,
+                        marginTop: 20
+                      }}>
                 <Text style={{color: '#fdfdfd'}}>Signup</Text>
               </Button>
             </View>

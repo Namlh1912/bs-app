@@ -57,7 +57,14 @@ export default class Login extends Component {
             <Icon active name='ios-lock' style={{color: "#687373"}} />
             <Input placeholder='Password' onChangeText={(text) => this.setState({password: text})} secureTextEntry={true} placeholderTextColor="#687373" />
           </Item>
-          {this.state.hasError?<Text style={{color: "#c0392b", textAlign: 'center', marginTop: 10}}>{this.state.errorText}</Text>:null}
+
+          { this.state.hasError
+            ? <Text style={{color: "#c0392b", textAlign: 'center', marginTop: 10}}>
+                {this.state.errorText}
+              </Text>
+            :null
+          }
+
           <View style={{marginBottom: 35, width: '100%'}}>
             <Text
               style={{
@@ -79,8 +86,16 @@ export default class Login extends Component {
               </Text>
             </Text>
           </View>
+
+          {/*Login button style*/}
           <View style={{alignItems: 'center'}}>
-            <Button onPress={() => this.login()} style={{backgroundColor: Colors.navbarBackgroundColor, marginTop: 20}}>
+            <Button onPress={() => this.login()}
+                    style={{
+                      width: 70,
+                      justifyContent: 'center',
+                      backgroundColor: Colors.navbarBackgroundColor,
+                      marginTop: 20
+                    }}>
               <Text style={{color: '#fdfdfd'}}>Login</Text>
             </Button>
           </View>

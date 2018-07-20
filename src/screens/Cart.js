@@ -7,13 +7,20 @@ import React, { Component } from 'react';
 import { TouchableHighlight } from 'react-native';
 import { Container, Content, View, Grid, Col, Left, Right, Button, Icon, List, ListItem, Body, Radio, Input, Item } from 'native-base';
 import FAIcon  from 'react-native-vector-icons/FontAwesome';
+import { connect } from 'react-redux';
 
 // Our custom files and classes import
 import Colors from '../components/Colors';
 import Text from '../components/Text';
 import Navbar from '../components/Navbar';
 
-export default class Cart extends Component {
+const mapStateToProps = state => {
+  return{
+    cart: state.carts.cart,
+  }
+}
+
+class Cart extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,11 +40,13 @@ export default class Cart extends Component {
   }
 
   componentWillMount() {
-    if(this.props.cartItems){
-      this.setState({cartItems: this.props.cartItems});
-      this.props.cartItems.map((item) => {
-        var total = 0;
+    console.log(this.props.cart);
+    if(this.props.cart){
+      this.setState({cartItems: this.props.cart.items});
+      var total = 0;
+      this.props.cart.items.map((item) => {
         total += parseFloat(item.price) * parseInt(item.quantity);
+        console.log(total);
         this.setState({total: total});
       });
     }
@@ -47,20 +56,13 @@ export default class Cart extends Component {
     var left = (
       <Left style={{flex:1}}>
         <Button onPress={() => this.props.navigation.goBack()} transparent>
-          <Icon name='ios-arrow-back' />
+          <Icon style={{color: 'white'}} name='ios-arrow-back' />
         </Button>
       </Left>
     );
-    var right = (
-      <Right style={{flex:1}}>
-        <Button  transparent>
-          <Icon name='ios-search-outline' />
-        </Button>
-      </Right>
-    );
     return(
       <Container style={{backgroundColor: '#fdfdfd'}}>
-        <Navbar left={left} right={right} title="CHECKOUT" />
+        <Navbar left={left} title="CHECKOUT" />
         <Content padder>
           <TouchableHighlight onPress={() => this.props.navigation.navigate('Login')} >
             <View style={{flex: 1, alignItems: 'center', backgroundColor: '#6fafc4', paddingTop: 20, paddingBottom: 20}}>
@@ -72,7 +74,7 @@ export default class Cart extends Component {
           <Text style={{marginTop: 15, fontSize: 18}}>Your order</Text>
           <View style={styles.invoice}>
             <List>
-              {this.state.cartItems
+              {this.props.cart
                 ? this.renderItems()
                 : ''
               }
@@ -148,7 +150,7 @@ export default class Cart extends Component {
 
   renderItems() {
     let items = [];
-    this.state.cartItems.map((item, i) => {
+    this.props.cart.items.map((item, i) => {
       items.push(
         <ListItem
           key={i}
@@ -156,12 +158,12 @@ export default class Cart extends Component {
         >
           <Body style={{paddingLeft: 10}}>
           <Text style={{fontSize: 18}}>
-            {item.quantity > 1 ? item.quantity+ " x " : null}
+            {item.quantity > 0 ? item.quantity+ " x " : null}
             {item.title}
           </Text>
           </Body>
           <Right>
-            <Text style={{fontSize: 16, fontWeight: 'bold', marginBottom: 10}}>{item.price}</Text>
+            <Text style={{fontSize: 16, fontWeight: 'bold', marginBottom: 10}}>{item.price}$</Text>
           </Right>
         </ListItem>
       );
@@ -187,3 +189,5 @@ const styles = {
     backgroundColor: '#bdc3c7'
   }
 };
+
+export default connect(mapStateToProps, null)(Cart)

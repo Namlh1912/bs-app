@@ -3,7 +3,7 @@ import * as ACTIONS from '../types';
 export function AddItemCart(book) {
   return{
     type: ACTIONS.ADD_ITEM_TO_CART,
-    book,
+    book
   };
 }
 
@@ -14,10 +14,9 @@ export function EmptyCart(){
   };
 }
 
-export function UpdateItemQuantity(index,book,quantity) {
+export function UpdateItemQuantity(book,quantity) {
   return{
     type:ACTIONS.UPDATE_ITEM_QUANTITY,
-    index,
     book,
     quantity
   };

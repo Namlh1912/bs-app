@@ -4,9 +4,11 @@
 
 // React native and others libraries imports
 import React, {Component} from 'react';
-import {AsyncStorage, Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 import {View, Container, Content, Button, Left, Right, Icon, Grid, Col, Toast, Text as NBText} from 'native-base';
 import HeaderImageScrollView, {TriggeringView} from 'react-native-image-header-scroll-view';
+import {connect} from 'react-redux';
+import { cartActions } from '../redux/actions';
 
 // Our custom files and classes import
 import Colors from '../components/Colors';
@@ -19,14 +21,30 @@ import books from './mock-data';
 import background from '../../assets/background.jpg';
 import mc from '../../assets/mc.jpg';
 
-export default class BookDetail extends Component {
+const mapStateToProps = (state) => {
+  console.log(state.carts.cart);
+  return {
+    carts: state.carts,
+  };
+};
 
+const mapDispatchToProps = dispatch => ({
+  addItemToCart: (book) => {
+    dispatch(cartActions.AddItemCart(book));
+  },
+  updateItemQuantity: (book, quantity) => {
+    dispatch(cartActions.UpdateItemQuantity(book, quantity));
+  }
+});
+
+class BookDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       book: {},
       activeSlide: 0,
       quantity: 1,
+      bookExist: false,
     };
   }
 
@@ -40,8 +58,6 @@ export default class BookDetail extends Component {
   }
 
   render() {
-    console.log(this.state.book.title);
-
     //Left-side Navbar
     var left = (
       <Left style={{flex: 1}}>
@@ -77,7 +93,6 @@ export default class BookDetail extends Component {
               style={styles.backdrop}
             />
           }
-
           renderForeground={() => (
             <View style={styles.overlay}>
               <Image
@@ -174,7 +189,7 @@ export default class BookDetail extends Component {
               marginLeft: 7,
               marginBottom: 10
             }}/>
-            {this.renderSimilairs()}
+            {this.renderSimilars()}
           </View>
 
         </HeaderImageScrollView>
@@ -182,41 +197,42 @@ export default class BookDetail extends Component {
     );
   }
 
-  renderSimilairs() {
+  renderSimilars() {
     let items = [];
     let stateItems = books.filter(book => book.price > this.state.book.price);
-    console.log(stateItems);
-    for (var i = 0; i < 4; i += 2) {
-      if (stateItems[i + 1]) {
-        items.push(
-          <Grid key={i}>
-            <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]}/>
-            <Book navigation={this.props.navigation} key={stateItems[i + 1].id} book={stateItems[i + 1]} isRight/>
-          </Grid>
-        );
+    if(stateItems.length > 0){
+      for (var i = 0; i < 4; i += 2) {
+        if (stateItems[i + 1]) {
+          items.push(
+            <Grid key={i}>
+              <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]}/>
+              <Book navigation={this.props.navigation} key={stateItems[i + 1].id} book={stateItems[i + 1]} isRight/>
+            </Grid>
+          );
+        }
+        else {
+          items.push(
+            <Grid key={i}>
+              <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]}/>
+              <Col key={i + 1}/>
+            </Grid>
+          );
+        }
       }
-      else {
-        items.push(
-          <Grid key={i}>
-            <Book navigation={this.props.navigation} key={stateItems[i].id} book={stateItems[i]}/>
-            <Col key={i + 1}/>
-          </Grid>
-        );
-      }
+    }else{
+      items.push(
+        <Grid key={0}>
+          <Text>There is no similars book</Text>
+        </Grid>
+      )
     }
     return items;
   }
 
   addToCart() {
-    var book = this.state.book;
-    book['quantity'] = this.state.quantity;
-    AsyncStorage.getItem("CART", (err, res) => {
-      if (!res) AsyncStorage.setItem("CART", JSON.stringify([book]));
-      else {
-        var items = JSON.parse(res);
-        items.push(book);
-        AsyncStorage.setItem("CART", JSON.stringify(items));
-      }
+    if(this.state.bookExist === false){
+      var book = Object.assign(this.state.book, {quantity: this.state.quantity});
+      this.props.addItemToCart(book);
       Toast.show({
         text: 'Product added to your cart !',
         position: 'bottom',
@@ -224,7 +240,10 @@ export default class BookDetail extends Component {
         buttonText: 'Dismiss',
         duration: 3000
       });
-    });
+      this.setState({bookExist: true});
+    }else{
+      this.props.updateItemQuantity(this.state.book, this.state.quantity);
+    }
   }
 }
 
@@ -266,4 +285,5 @@ var styles = StyleSheet.create({
   }
 });
 
+export default connect(mapStateToProps,mapDispatchToProps)(BookDetail)
 
