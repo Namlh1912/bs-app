@@ -35,7 +35,7 @@ const styles={
   body: {
     flex:1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   title: {
     color: 'white',

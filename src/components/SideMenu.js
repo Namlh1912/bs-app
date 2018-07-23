@@ -4,13 +4,23 @@
 
 // React native and others libraries imports
 import React, { Component } from 'react';
-import { ScrollView, LayoutAnimation, UIManager, Linking } from 'react-native';
-import { View, List, ListItem, Body, Left, Right, Icon, Item, Input, Button, Grid, Col } from 'native-base';
+import { ScrollView, Linking, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, List, ListItem, Body, Left, Right, Icon, Grid, Col } from 'native-base';
+import { connect } from 'react-redux';
 
 // Our custom files and classes import
 import Text from './Text';
 
-export default class SideMenu extends Component {
+const mapStateToProps = state =>{
+  console.log(AsyncStorage.getItem('token'));
+  console.log(state.auth);
+  return{
+    isLoggedIn: state.auth.isLoggedIn,
+    user:state.auth.user
+  }
+};
+
+class SideMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,10 +28,81 @@ export default class SideMenu extends Component {
       searchError: false,
       subMenu: false,
       subMenuItems: [],
-      clickedItem: ''
+      clickedItem: '',
+      user:{}
     };
-
   }
+
+  componentWillMount(){
+    AsyncStorage.getItem('user', (errs,result) => {
+      if (!errs) {
+        if (result !== null) {
+          const value = JSON.parse(result);
+          this.setState({user:value});
+        }
+      }
+    })
+    AsyncStorage.getItem('token', (errs,result) => {
+      if (!errs) {
+        if (result !== null) {
+          console.log(result);
+        }
+      }
+    });
+    // AsyncStorage.getItem('user')
+    //   .then((result) => {
+    //     const value = JSON.parse(result);
+    //     this.setState({user:value});
+    //   })
+    //   .then(res => {
+    //     <Spinner size={30} type="9CubeGrid" color="#fff"/>
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+  }
+
+  renderLogin = () => (
+    <View>
+      <List>
+        <ListItem
+          icon
+          key={0}
+          button={true}
+          onPress={() => this.props.navigation.navigate('Login')}
+        >
+          <Left>
+            <Icon style={{fontSize: 18}} name={"ios-person"} />
+          </Left>
+          <Body>
+          <Text>Login</Text>
+          </Body>
+          <Right>
+            <Icon name="ios-arrow-forward" />
+          </Right>
+        </ListItem>
+      </List>
+    </View>
+  )
+
+  renderProfile = () =>(
+    <TouchableOpacity
+      style={{
+        padding: 20,
+        flex:1,
+        flexDirection:'row',
+        justifyContent:'space-between'
+      }}
+      onPress={() => this.props.navigation.navigate('Profile', {
+        userId: this.state.user.id
+      })}
+    >
+      <Text style={{color:'white', fontSize: 20, fontWeight:'bold'}}>
+        Welcome, {this.props.user? this.props.user.username : this.state.user.username}
+      </Text>
+      <Icon style={{color:'white'}} name="ios-arrow-forward" />
+    </TouchableOpacity>
+  )
 
   render() {
     return(
@@ -30,11 +111,13 @@ export default class SideMenu extends Component {
       </ScrollView>
     );
   }
-
   renderMenu() {
       return(
-        <View>
-          <View style={{paddingTop: 40 ,paddingRight: 15}}>
+        <View style={{paddingTop: 20 ,backgroundColor:'#78a9db'}} >
+          {this.props.isLoggedIn? this.renderProfile():this.renderLogin()}
+          <View style={{backgroundColor: 'white'}}>
+          <View style={{paddingRight: 15}}>
+
             <List>
               {this.renderList()}
             </List>
@@ -50,6 +133,11 @@ export default class SideMenu extends Component {
               <Col style={{alignItems: 'center'}}><Icon style={{fontSize: 18}} name='logo-snapchat' onPress={() => Linking.openURL('http://www.snapchat.com/').catch(err => console.error('An error occurred', err))} /></Col>
             </Grid>
           </View>
+          <View style={styles.line} />
+          <View style={{paddingRight: 15, paddingLeft: 15}}>
+            <Text style={{marginBottom: 7}}>Hotline: 1900-8787</Text>
+          </View>
+          </View>
         </View>
       );
   }
@@ -58,20 +146,27 @@ export default class SideMenu extends Component {
     let MenuItems = [];
     Items.map(item => {
       MenuItems.push(
-        <ListItem
-          last
-          icon
+        <TouchableOpacity
           key={item.id}
-          button={true}
-          onPress={() => this.props.navigation.navigate(item.key)}
+          style={{
+            padding: 20,
+            flex:1,
+            flexDirection:'row',
+          }}
+          onPress={() => AsyncStorage.getItem('token').then((value) => {
+            if(value){
+              this.props.navigation.navigate(item.key);
+            }else{
+              if(item.auth === 'require'){
+                this.props.navigation.navigate('Login');
+              }
+              this.props.navigation.navigate(item.key);
+            }
+          })}
         >
-          <Left>
-            <Icon style={{fontSize: 18}} name={item.icon} />
-          </Left>
-          <Body style={{marginLeft: -15}}>
-          <Text style={{fontSize: 16}}>{item.title}</Text>
-          </Body>
-        </ListItem>
+          <Icon style={{fontSize: 18}} name={item.icon} />
+          <Text style={{fontSize: 16, paddingLeft: 20}}>{item.title}</Text>
+        </TouchableOpacity>
       );
     });
     return MenuItems;
@@ -95,28 +190,39 @@ const styles = {
 
 const Items = [
   {
-    id: 1,
+    id: 2,
     title: 'Home',
     icon: 'ios-book',
     key: 'Home'
   },
   {
-    id: 190,
-    title: 'Login',
-    icon: 'ios-person',
-    key: 'Login'
+    id: 3,
+    title: 'Profile',
+    icon: 'md-phone-portrait',
+    key: 'Profile',
+    auth: 'require',
   },
   {
-    id: 20,
+    id: 4,
+    title: 'Manage Order',
+    icon: 'md-phone-portrait',
+    key: 'ManageOrder',
+    auth: 'require',
+  },
+  {
+    id: 5,
     key: 'map',
     title: 'Store Finder',
     icon: 'ios-pin',
-    key: 'map'
   },
   {
-    id: 21,
-    title: 'Feedback',
+    id: 6,
+    title: 'CustomerService',
     icon: 'md-phone-portrait',
-    key: 'Feedback'
+    key: 'CustomerService'
   }
 ];
+
+export default connect(
+  mapStateToProps
+)(SideMenu)

@@ -1,28 +1,31 @@
-import store from 'store/dist/store.modern';
+import { AsyncStorage } from "react-native";
 import * as ACTIONS from '../types';
 
-const user = store.get('user');
-const token = store.get('token');
-const initialState = user ? { loggedIn: true, ...JSON.parse(user), token } : { loggedIn: false };
+const INITIAL_STATE = {
+  isLoading: false,
+  isLoggedIn: true,
+};
 
-export default function auth(state = initialState, action) {
+export default function auth(state = INITIAL_STATE, action) {
   switch (action.type) {
     case ACTIONS.LOGIN_REQUEST:
       return {
-        loggedIn: false,
+        isLoggedIn:false
       };
     case ACTIONS.LOGIN_SUCCESS:
       return {
-        loggedIn: true,
+        isLoggedIn: true,
         ...action.payload,
       };
     case ACTIONS.LOGIN_FAIL:
       return {
-        loggedIn: false,
+        isLoggedIn: false,
       };
     case ACTIONS.LOGOUT_SUCCESS:
+      AsyncStorage.removeItem('token');
+      AsyncStorage.removeItem('user');
       return {
-        loggedIn: false,
+        isLoggedIn: false,
       };
     default:
       return state;

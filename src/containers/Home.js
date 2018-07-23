@@ -5,7 +5,6 @@
 // React native and others libraries imports
 import React, {Component} from 'react';
 import {Container, Content, View, Left, Right, Button, Icon, Grid, Col} from 'native-base';
-import {withNavigation} from 'react-navigation';
 
 // Our custom files and classes import
 import Navbar from '../components/Navbar';

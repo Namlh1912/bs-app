@@ -3,6 +3,9 @@ export const LOGIN_REQUEST = '@@auth/LOGIN';
 export const LOGIN_SUCCESS = '@@auth/LOGIN_SUCCESS';
 export const LOGIN_FAIL = '@@auth/LOGIN_FAIL';
 
+//LOGOUT
+export const LOGOUT_SUCCESS = '@@auth/LOGOUT';
+
 //LIST BOOK
 export const LIST_BOOK_REQUEST = '@@auth/LIST_BOOK';
 export const LIST_BOOK_SUCCESS = '@@auth/LIST_BOOK_SUCCESS';
@@ -12,6 +15,12 @@ export const LIST_BOOK_FAIL = '@@auth/LIST_BOOK__FAIL';
 export const GET_USER_INFO_REQUEST = '@@auth/GET_USER_INFO_REQUEST';
 export const GET_USER_INFO_SUCCESS = '@@auth/GET_USER_INFO_SUCCESS';
 export const GET_USER_INFO_FAIL = '@@auth/GET_USER_INFO_FAIL';
+
+// USER SIGNUP
+export const USER_SIGNUP_REQUEST = '@@auth/USER_SIGNUP_REQUEST';
+export const USER_SIGNUP_SUCCESS = '@@auth/USER_SIGNUP_SUCCESS';
+export const USER_SIGNUP_FAIL = '@@auth/USER_SIGNUP_FAIL';
+
 
 //LIST ORDER HISTORY
 export const LIST_ORDER_REQUEST = '@@auth/LIST_ORDER_REQUEST';

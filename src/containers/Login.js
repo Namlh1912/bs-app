@@ -4,14 +4,26 @@
 
 // React native and others libraries imports
 import React, { Component } from 'react';
-import { Container, View, Left, Right, Button, Icon, Item, Input } from 'native-base';
+import { Container, View, Left, Right, Button, Icon, Item, Input, Toast } from 'native-base';
+import { connect } from 'react-redux';
+import { authActions } from '../redux/actions';
 
 // Our custom files and classes import
 import Colors from '../components/Colors';
 import Text from '../components/Text';
 import Navbar from '../components/Navbar';
 
-export default class Login extends Component {
+const mapStateToProps = state => {
+  return state;
+}
+
+const mapDispatchToProps = dispatch => ({
+  onLogin: (username, password) => {
+    authActions.Login(username, password)(dispatch);
+  },
+});
+
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +33,6 @@ export default class Login extends Component {
       errorText: ''
     };
   }
-
 
   render() {
     var left = (
@@ -76,7 +87,7 @@ export default class Login extends Component {
             >
               Don't have an account?
               <Text
-                onPress={()=> this.props.navigation.navigate('Signup')}
+                onPress={()=> this.props.navigation.navigate('SignUp')}
                 style={{
                   color: 'blue',
                   textDecorationLine:'underline'
@@ -89,7 +100,7 @@ export default class Login extends Component {
 
           {/*Login button style*/}
           <View style={{alignItems: 'center'}}>
-            <Button onPress={() => this.login()}
+            <Button onPress={this.login}
                     style={{
                       width: 70,
                       justifyContent: 'center',
@@ -104,14 +115,22 @@ export default class Login extends Component {
     );
   }
 
-  login() {
-    /*
-      Remove this code and replace it with your service
-      Username: this.state.username
-      Password: this.state.password
-    */
-    this.setState({hasError: true, errorText: 'Invalid username or password !'});
+  login = () => {
+    const username = this.state.username.toLowerCase();
+    const password = this.state.password;
+    this.props.onLogin(username, password);
+    Toast.show({
+      text: 'Login success !',
+      position: 'bottom',
+      type: 'success',
+      buttonText: 'Dismiss',
+      duration: 3000
+    });
+    this.props.navigation.navigate('Home');
   }
-
-
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login)

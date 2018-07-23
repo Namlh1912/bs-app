@@ -5,14 +5,26 @@
 // React native and others libraries imports
 import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
-import { Container, View, Left, Right, Button, Icon, Item, Input } from 'native-base';
+import { Container, View, Left, Right, Button, Icon, Item, Input, Toast } from 'native-base';
+import { connect } from 'react-redux';
+import { userActions } from "../redux/actions";
 
 // Our custom files and classes import
 import Colors from '../components/Colors';
 import Text from '../components/Text';
 import Navbar from '../components/Navbar';
 
-export default class Signup extends Component {
+const mapStateToProps = state => {
+  return state;
+}
+
+const mapDispatchToProps = dispatch => ({
+    createAccount: (user) => {
+      dispatch(userActions.SignUp(user));
+    },
+});
+
+class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -75,7 +87,7 @@ export default class Signup extends Component {
             </Item>
             {this.state.hasError?<Text style={{color: "#c0392b", textAlign: 'center', marginTop: 10}}>{this.state.errorText}</Text>:null}
             <View style={{alignItems: 'center'}}>
-              <Button onPress={() => this.signup()}
+              <Button onPress={this.onHandleSignUp}
                       style={{
                         width: 70,
                         justifyContent: 'center',
@@ -91,7 +103,10 @@ export default class Signup extends Component {
     );
   }
 
-  signup() {
+
+  onHandleSignUp = () => {
+
+    //validate input
     if(this.state.email===""||this.state.name===""||this.state.username===""||this.state.password===""||this.state.rePassword==="") {
       this.setState({hasError: true, errorText: 'Please fill all fields !'});
       return;
@@ -113,6 +128,23 @@ export default class Signup extends Component {
       return;
     }
     this.setState({hasError: false});
+
+    //create object user
+    var user = Object.assign(
+      {username: this.state.username.toLowerCase()},
+      {password: this.state.password.toLowerCase()},
+      {email: this.state.email.toLowerCase()},
+      {mobile: '12345678'}
+      );
+
+    this.props.createAccount(user);
+    Toast.show({
+      text: 'Your account has been created !',
+      position: 'bottom',
+      type: 'success',
+      buttonText: 'Dismiss',
+      duration: 3000
+    });
     this.props.navigation.navigate('Home');
   }
 
@@ -120,6 +152,6 @@ export default class Signup extends Component {
     var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return reg.test(email);
   }
-
-
 }
+
+export default connect(mapStateToProps,mapDispatchToProps)(SignUp)

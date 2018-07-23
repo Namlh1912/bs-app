@@ -10,7 +10,6 @@ export function AddItemCart(book) {
 export function EmptyCart(){
   return{
     type: ACTIONS.EMPTY_CART,
-
   };
 }
 

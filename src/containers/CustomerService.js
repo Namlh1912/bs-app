@@ -11,7 +11,7 @@ import Text from '../components/Text';
 import Navbar from '../components/Navbar';
 import Colors from '../components/Colors';
 
-export default class Feedback extends Component {
+export default class CustomerService extends Component {
   constructor(props) {
     super(props);
     this.state = {

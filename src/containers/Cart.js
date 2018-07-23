@@ -16,6 +16,7 @@ import Navbar from '../components/Navbar';
 
 const mapStateToProps = state => {
   return{
+    isLoggedIn: state.users.loggedIn,
     cart: state.carts.cart,
   }
 }
@@ -70,7 +71,6 @@ class Cart extends Component {
               <Text style={{color: '#fdfdfd'}}>Returning customer ? click here to login</Text>
             </View>
           </TouchableHighlight>
-          { this.renderFormOrder() }
           <Text style={{marginTop: 15, fontSize: 18}}>Your order</Text>
           <View style={styles.invoice}>
             <List>
@@ -118,36 +118,6 @@ class Cart extends Component {
     );
   }
 
-  renderFormOrder = () => (
-    <View>
-      <Text style={{marginTop: 15, fontSize: 18}}>Shipping information</Text>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='Name' onChangeText={(text) => this.setState({name: text})} placeholderTextColor="#687373" />
-      </Item>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='Email' onChangeText={(text) => this.setState({email: text})} placeholderTextColor="#687373" />
-      </Item>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='Phone' onChangeText={(text) => this.setState({phone: text})} placeholderTextColor="#687373" />
-      </Item>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='Country' onChangeText={(text) => this.setState({country: text})} placeholderTextColor="#687373" />
-      </Item>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='Address' onChangeText={(text) => this.setState({address: text})} placeholderTextColor="#687373" />
-      </Item>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='City' onChangeText={(text) => this.setState({city: text})} placeholderTextColor="#687373" />
-      </Item>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='Postcode' onChangeText={(text) => this.setState({postcode: text})} placeholderTextColor="#687373" />
-      </Item>
-      <Item regular style={{marginTop: 7}}>
-        <Input placeholder='Note' onChangeText={(text) => this.setState({note: text})} placeholderTextColor="#687373" />
-      </Item>
-    </View>
-  )
-
   renderItems() {
     let items = [];
     this.props.cart.items.map((item, i) => {
@@ -172,8 +142,13 @@ class Cart extends Component {
   }
 
   checkout() {
-    console.log(this.state);
-    alert("Check the log");
+    console.log(this.props.isLoggedIn);
+    if(this.props.isLoggedIn) {
+      console.log(this.state);
+      alert("Check the log");
+    }else{
+      this.props.navigation.navigate('Login');
+    }
   }
 
 }

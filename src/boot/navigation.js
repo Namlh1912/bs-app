@@ -1,26 +1,26 @@
 import React from 'react';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
-import {Text} from 'react-native';
-import { Icon } from 'native-base';
-import { withNavigation } from 'react-navigation';
 
 import { Root } from 'native-base';
-import Home from '../screens/Home';
-import BookDetail from '../screens/BookDetail';
-import Login from '../screens/Login';
-import Feedback from '../screens/Feedback';
-import Cart from '../screens/Cart';
-import Signup from '../screens/Signup';
+import Home from '../containers/Home';
+import BookDetail from '../containers/BookDetail';
+import BookDetail2 from '../containers/BookDetail2';
+import Login from '../containers/Login';
+import Profile from '../containers/Profile';
+import CustomerService from '../containers/CustomerService';
+import Cart from '../containers/Cart';
+import SignUp from '../containers/Signup';
 import SideMenu from '../components/SideMenu';
 
 const Stack = createStackNavigator(
   {
     Home: Home,
-    Details: BookDetail,
+    Details: BookDetail2,
     Login: Login,
-    Feedback: Feedback,
+    CustomerService: CustomerService,
     Cart: Cart,
-    Signup: Signup,
+    SignUp: SignUp,
+    Profile: Profile
   },
   {
     headerMode: 'none',

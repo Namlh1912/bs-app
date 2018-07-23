@@ -1,55 +1,47 @@
-
-import store from 'store/dist/store.modern';
-
 import * as ACTIONS from '../types';
 import authServices from '../services/auth';
+import { AsyncStorage } from 'react-native';
 
-function login({ username, password }) {
+export function Login(username,password) {
   function request() {
     return { type: ACTIONS.LOGIN_REQUEST };
   }
   function success(payload) {
     return { type: ACTIONS.LOGIN_SUCCESS, payload };
   }
-  function failure() {
-    return { type: ACTIONS.LOGIN_FAIL };
-  }
-  return async (dispatch) => {
+  return dispatch => {
     dispatch(request());
-    await authServices.login({ username, password }).then(
+    authServices.login(username,password).then(
       (res) => {
-        store.set('token', res.headers['x-auth-token']);
-        store.set('user', JSON.stringify(res.data.data));
-
-        dispatch(success({ ...res.data.data }));
-      },
+        AsyncStorage.setItem('token',res.headers.authorization);
+        AsyncStorage.setItem('user', JSON.stringify(res.data.data));
+        dispatch(success({ user:res.data.data }));
+      }
+    ).catch(
       (error) => {
-        dispatch(failure());
+        console.log(error);
+        Toast.show({
+          text: 'Error! Please try again!',
+          position: 'bottom',
+          type: 'error',
+          buttonText: 'Dismiss',
+          duration: 3000
+        });
       },
     );
   };
 }
 
-function logout() {
-  function success() {
-    store.remove('token');
-    store.remove('user');
-    return {
-      type: ACTIONS.LOGOUT_SUCCESS,
-    };
+function Logout() {
+  return{
+    type:ACTIONS.LOGOUT_SUCCESS,
   }
-
-  return async (dispatch) => {
-    authServices.logout().then(async () => {
-      await dispatch(success());
-      // await dispatch(actions.navigateTo('login'));
-    });
-  };
 }
 
+
 const authActions = {
-  login,
-  logout,
+  Login,
+  Logout
 };
 
 export default authActions;
